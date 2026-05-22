@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
+
+status=0
+
+check_file() {
+  local path="$1"
+  local label="$2"
+
+  if [ -f "$path" ]; then
+    echo "ok - $label"
+  else
+    echo "missing - $label ($path)"
+    status=1
+  fi
+}
+
+check_dir() {
+  local path="$1"
+  local label="$2"
+
+  if [ -d "$path" ]; then
+    echo "ok - $label"
+  else
+    echo "missing - $label ($path)"
+    status=1
+  fi
+}
+
+check_file "$ROOT/claude/CLAUDE.md" "Claude source rules"
+check_file "$ROOT/codex/generated/CLAUDE.md" "Codex generated rules"
+check_dir "$CODEX_HOME" "Codex home"
+check_dir "$CODEX_HOME/skills" "Codex skills directory"
+check_file "$CODEX_HOME/generated/CLAUDE.md" "Installed Codex generated rules"
+
+exit "$status"
+
