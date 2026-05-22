@@ -39,8 +39,8 @@ ruby -rjson -rfileutils -e '
 
   def destination_for_project(profile, project_root, claude_file)
     relative = claude_file.sub(project_root.sub(%r{/+\z}, "") + "/", "")
-    parent = File.dirname(relative.sub(%r{\.claude/CLAUDE\.md\z}, ""))
-    segment = parent == "." || parent.empty? ? "root" : parent
+    segment = relative.sub(%r{/?\.claude/CLAUDE\.md\z}, "")
+    segment = "root" if segment.empty?
     File.join("claude", "projects", profile, segment, "CLAUDE.md")
   end
 
