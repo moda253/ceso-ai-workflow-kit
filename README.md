@@ -19,6 +19,7 @@ codex/
 bin/
   codex-with-claude-sync
 scripts/
+  help
   sync-claude-to-codex
   sync-and-commit
   configure
@@ -117,6 +118,13 @@ Claude-side source files and let the scripts generate Codex output.
 Choose which Claude files and skills to sync in `config.local.json`. This file
 is gitignored because every developer can have different local paths.
 Use `profiles` in `config.local.json` to group sources by project.
+
+Show the workflow command cheat sheet:
+
+```bash
+cd /path/to/ceso-ai-workflow-kit
+scripts/help
+```
 
 Run the guided setup again to add or update a profile:
 

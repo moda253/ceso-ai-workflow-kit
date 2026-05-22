@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cat <<'HELP'
+CESO AI Workflow Kit Help
+
+Terminal commands:
+  scripts/configure
+      Add or update a local profile with guided setup.
+
+  scripts/configure --help
+      Show detailed configure/reset/remove-profile help.
+
+  scripts/sync-and-commit
+      Sync all configured sources, generate Codex files, install them, commit,
+      and push.
+
+  scripts/sync-and-commit --profile <name> "Commit message"
+      Sync only one configured profile.
+
+  scripts/sync-and-commit --list-profiles
+      List configured profiles.
+
+  scripts/sync-claude-to-codex
+      Generate Codex files from the Claude-side files in this repo.
+
+  scripts/install
+      Install generated Codex files into ~/.codex.
+
+  scripts/install-codex-wrapper
+      Install the stable Codex startup wrapper into ~/.local/bin.
+
+  scripts/doctor
+      Check whether the local kit and Codex install are present.
+
+Claude conversation commands:
+  Update the CESO AI workflow kit.
+      Claude should run scripts/sync-and-commit.
+
+  Update the CESO AI workflow kit for <profile>.
+      Claude should run scripts/sync-and-commit --profile <profile>.
+
+  Add or change a project profile in the CESO AI workflow kit.
+      Claude should run scripts/configure.
+
+Codex conversation commands:
+  Update the CESO AI workflow kit and verify what changed.
+      Codex should pull, sync, install, then report git/sync/verification
+      results from installed ~/.codex files.
+
+  Update the CESO AI workflow kit for <profile> and verify what changed.
+      Codex should refresh the kit and focus verification on that profile.
+
+Important files:
+  config.local.json
+      Gitignored local source/profile config.
+
+  config.example.json
+      Committed template for local config.
+
+  claude/
+      Source-of-truth assistant files.
+
+  codex/
+      Generated files. Do not hand-edit.
+HELP
