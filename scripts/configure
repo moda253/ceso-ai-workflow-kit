@@ -6,8 +6,34 @@ CONFIG="${WORKFLOW_KIT_CONFIG:-$ROOT/config.local.json}"
 RESET=0
 REMOVE_PROFILE=""
 
+usage() {
+  cat <<'USAGE'
+Usage:
+  scripts/configure
+      Run the guided setup to add or update a profile in config.local.json.
+
+  scripts/configure --remove-profile <name>
+      Remove a profile from config.local.json and drop sources no remaining
+      profile references.
+
+  scripts/configure --reset
+      Delete config.local.json so local setup can start over.
+
+  scripts/configure -h | --h | --help
+      Show this help.
+
+Environment:
+  WORKFLOW_KIT_CONFIG=/path/to/config.json
+      Override the local config path. Useful for tests or alternate setups.
+USAGE
+}
+
 while [ "$#" -gt 0 ]; do
   case "$1" in
+    -h|--h|--help)
+      usage
+      exit 0
+      ;;
     --reset)
       RESET=1
       shift

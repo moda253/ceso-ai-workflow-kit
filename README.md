@@ -125,6 +125,13 @@ cd /path/to/ceso-ai-workflow-kit
 scripts/configure
 ```
 
+Show setup help:
+
+```bash
+cd /path/to/ceso-ai-workflow-kit
+scripts/configure --help
+```
+
 Remove a local profile from `config.local.json`:
 
 ```bash
