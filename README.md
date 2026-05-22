@@ -59,6 +59,13 @@ current conversation. Codex should pull this repo if needed, run
 `scripts/sync-claude-to-codex`, run `scripts/install`, then read the relevant
 updated files for the active conversation.
 
+When Codex refreshes the kit mid-conversation, it should report:
+
+- The git result: pulled new commits or already up to date.
+- The sync/install result: both scripts completed successfully.
+- The verification result: current commit hash and the relevant changed content
+  found in the installed Codex files under `~/.codex`.
+
 ## Startup Wrapper
 
 Point your Codex shell alias at a wrapper that runs sync and install before
