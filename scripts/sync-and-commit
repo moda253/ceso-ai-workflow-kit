@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+COMMIT_MSG="${1:-Update AI workflow}"
+
+echo "Copying Claude source files..."
+
+mkdir -p "$ROOT/claude/skills/ceso-labs"
+cp "$HOME/.claude/CLAUDE.md" "$ROOT/claude/CLAUDE.md"
+cp "$HOME/.claude/skills/ceso-labs/SKILL.md" "$ROOT/claude/skills/ceso-labs/SKILL.md"
+
+echo "Syncing to Codex..."
+"$ROOT/scripts/sync-claude-to-codex"
+
+echo "Installing..."
+"$ROOT/scripts/install"
+
+echo ""
+git -C "$ROOT" status --short
+
+if [ -z "$(git -C "$ROOT" status --short)" ]; then
+  echo "No workflow changes to commit."
+  exit 0
+fi
+
+echo ""
+echo "Committing: \"$COMMIT_MSG\""
+git -C "$ROOT" add .
+git -C "$ROOT" commit -m "$COMMIT_MSG"
+git -C "$ROOT" push
+
+echo "Done."
