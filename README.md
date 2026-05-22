@@ -17,17 +17,57 @@ codex/
   skills/
 scripts/
   sync-claude-to-codex
+  sync-and-commit
   install
   doctor
 ```
 
 ## Workflow
 
+Update the kit from Claude's source files, generate Codex files, install them,
+commit the changes, and push:
+
 ```bash
+cd ~/code/ceso-ai-workflow-kit
+scripts/sync-and-commit
+```
+
+Use a custom commit message:
+
+```bash
+cd ~/code/ceso-ai-workflow-kit
+scripts/sync-and-commit "Update CESO workflow notes"
+```
+
+Run the steps manually when debugging:
+
+```bash
+cd ~/code/ceso-ai-workflow-kit
 scripts/sync-claude-to-codex
 scripts/install
 scripts/doctor
 ```
+
+## Conversation Commands
+
+Ask Claude:
+
+```text
+Sync the workflow kit.
+```
+
+Claude should copy the mapped source files into this repo, then run
+`scripts/sync-and-commit`.
+
+Ask Codex:
+
+```text
+Refresh the workflow kit and reload the ceso-labs guidance for this conversation.
+```
+
+Codex should pull this repo if needed, run `scripts/sync-claude-to-codex`, run
+`scripts/install`, then read the relevant updated files for the active
+conversation.
 
 ## Startup Wrapper
 
