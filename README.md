@@ -15,11 +15,43 @@ claude/
 codex/
   generated/
   skills/
+bin/
+  codex-with-claude-sync
 scripts/
   sync-claude-to-codex
   sync-and-commit
   install
   doctor
+```
+
+## Fresh Install
+
+Clone the repo:
+
+```bash
+mkdir -p ~/code
+git clone git@github.com:molson253/ceso-ai-workflow-kit.git ~/code/ceso-ai-workflow-kit
+cd ~/code/ceso-ai-workflow-kit
+```
+
+Install the generated Codex files:
+
+```bash
+scripts/sync-claude-to-codex
+scripts/install
+scripts/doctor
+```
+
+Add the Codex startup wrapper to `~/.zshrc`:
+
+```bash
+alias codex="$HOME/code/ceso-ai-workflow-kit/bin/codex-with-claude-sync"
+```
+
+Reload the shell:
+
+```bash
+source ~/.zshrc
 ```
 
 ## Workflow
