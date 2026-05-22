@@ -5,6 +5,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 mkdir -p "$ROOT/codex/generated"
 mkdir -p "$ROOT/codex/skills"
+mkdir -p "$ROOT/codex/projects"
 
 cat > "$ROOT/codex/generated/CLAUDE.md" <<'HEADER'
 <!-- GENERATED FROM claude/CLAUDE.md. Do not edit directly. -->
@@ -34,5 +35,21 @@ if [ -d "$ROOT/claude/skills" ]; then
   done
 fi
 
-echo "Synced Claude workflow into Codex generated output."
+if [ -d "$ROOT/claude/projects" ]; then
+  rm -rf "$ROOT/codex/projects"
+  mkdir -p "$ROOT/codex/projects"
+  cp -R "$ROOT/claude/projects"/. "$ROOT/codex/projects"/
 
+  find "$ROOT/codex/projects" -name "CLAUDE.md" -type f | while read -r project_file; do
+    relative_path="${project_file#$ROOT/codex/projects/}"
+    tmp_file="$(mktemp)"
+    {
+      echo "<!-- GENERATED FROM claude/projects/$relative_path. Do not edit directly. -->"
+      echo
+      cat "$project_file"
+    } > "$tmp_file"
+    mv "$tmp_file" "$project_file"
+  done
+fi
+
+echo "Synced Claude workflow into Codex generated output."

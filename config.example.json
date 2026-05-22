@@ -15,5 +15,16 @@
       "source": "~/code/example-project/.claude/CLAUDE.md",
       "destination": "claude/projects/example-project/CLAUDE.md"
     }
-  ]
+  ],
+  "profiles": {
+    "default": [
+      "global-claude",
+      "example-skill"
+    ],
+    "example-project": [
+      "global-claude",
+      "example-skill",
+      "example-project"
+    ]
+  }
 }

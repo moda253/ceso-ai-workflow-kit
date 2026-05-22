@@ -14,6 +14,7 @@ claude/
   skills/
 codex/
   generated/
+  projects/
   skills/
 bin/
   codex-with-claude-sync
@@ -74,6 +75,7 @@ source ~/.zshrc
 
 Choose which Claude files and skills to sync in `config.local.json`. This file
 is gitignored because every developer can have different local paths.
+Use `profiles` in `config.local.json` to group sources by project.
 
 Update the kit from the configured Claude source files, generate Codex files,
 install them, commit the changes, and push:
@@ -81,6 +83,20 @@ install them, commit the changes, and push:
 ```bash
 cd /path/to/ceso-ai-workflow-kit
 scripts/sync-and-commit
+```
+
+Update only the sources for a named profile:
+
+```bash
+cd /path/to/ceso-ai-workflow-kit
+scripts/sync-and-commit --profile example-project "Update example project workflow"
+```
+
+List configured profiles:
+
+```bash
+cd /path/to/ceso-ai-workflow-kit
+scripts/sync-and-commit --list-profiles
 ```
 
 Use a custom commit message:
@@ -103,6 +119,7 @@ scripts/doctor
 
 Tell Claude to update the CESO AI workflow kit. Claude should copy the files
 listed in `config.local.json` into this repo, then run `scripts/sync-and-commit`.
+For project-specific updates, tell Claude which profile to use.
 
 Tell Codex to refresh the workflow kit and reload the ceso-labs guidance for the
 current conversation. Codex should pull this repo if needed, run

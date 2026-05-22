@@ -2,8 +2,38 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-COMMIT_MSG="${1:-Update AI workflow}"
 CONFIG="${WORKFLOW_KIT_CONFIG:-$ROOT/config.local.json}"
+PROFILE=""
+COMMIT_MSG="Update AI workflow"
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --profile)
+      PROFILE="${2:-}"
+      if [ -z "$PROFILE" ]; then
+        echo "Missing value for --profile"
+        exit 1
+      fi
+      shift 2
+      ;;
+    --profile=*)
+      PROFILE="${1#--profile=}"
+      shift
+      ;;
+    --list-profiles)
+      ruby -rjson -e '
+        config_path = ARGV.fetch(0)
+        config = JSON.parse(File.read(config_path))
+        config.fetch("profiles", {}).keys.sort.each { |name| puts name }
+      ' "$CONFIG"
+      exit 0
+      ;;
+    *)
+      COMMIT_MSG="$1"
+      shift
+      ;;
+  esac
+done
 
 if [ ! -f "$CONFIG" ]; then
   echo "Missing config: $CONFIG"
@@ -16,9 +46,27 @@ echo "Copying configured Claude source files..."
 ruby -rjson -rfileutils -e '
   root = ARGV.fetch(0)
   config_path = ARGV.fetch(1)
+  profile_name = ARGV.fetch(2)
   config = JSON.parse(File.read(config_path))
+  sources = config.fetch("sources")
 
-  config.fetch("sources").each do |source|
+  if !profile_name.empty?
+    profile_sources = config.fetch("profiles", {}).fetch(profile_name) do
+      warn "Unknown profile: #{profile_name}"
+      exit 1
+    end
+    selected_names = profile_sources.is_a?(Hash) ? profile_sources.fetch("sources") : profile_sources
+    selected = selected_names.each_with_object({}) { |name, memo| memo[name] = true }
+    missing = selected_names - sources.map { |source| source.fetch("name") }
+    unless missing.empty?
+      warn "Profile #{profile_name} references missing sources: #{missing.join(", ")}"
+      exit 1
+    end
+    sources = sources.select { |source| selected[source.fetch("name")] }
+    puts "profile #{profile_name}: #{selected_names.join(", ")}"
+  end
+
+  sources.each do |source|
     name = source.fetch("name")
     from = File.expand_path(source.fetch("source"))
     to = File.expand_path(source.fetch("destination"), root)
@@ -39,7 +87,7 @@ ruby -rjson -rfileutils -e '
 
     puts "copied #{name}: #{from} -> #{to}"
   end
-' "$ROOT" "$CONFIG"
+' "$ROOT" "$CONFIG" "$PROFILE"
 
 echo "Syncing to Codex..."
 "$ROOT/scripts/sync-claude-to-codex"

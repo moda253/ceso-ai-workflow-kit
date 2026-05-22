@@ -6,6 +6,7 @@ CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
 
 mkdir -p "$CODEX_HOME/generated"
 mkdir -p "$CODEX_HOME/skills"
+mkdir -p "$CODEX_HOME/projects"
 
 cp "$ROOT/codex/generated/CLAUDE.md" "$CODEX_HOME/generated/CLAUDE.md"
 
@@ -20,5 +21,10 @@ if [ -d "$ROOT/codex/skills" ]; then
   done
 fi
 
-echo "Installed Codex workflow into $CODEX_HOME."
+if [ -d "$ROOT/codex/projects" ]; then
+  rm -rf "$CODEX_HOME/projects"
+  mkdir -p "$CODEX_HOME/projects"
+  cp -R "$ROOT/codex/projects"/. "$CODEX_HOME/projects"/
+fi
 
+echo "Installed Codex workflow into $CODEX_HOME."

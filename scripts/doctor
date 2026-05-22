@@ -37,6 +37,7 @@ check_file "$CONFIG" "Local sync config"
 check_file "$ROOT/codex/generated/CLAUDE.md" "Codex generated rules"
 check_dir "$CODEX_HOME" "Codex home"
 check_dir "$CODEX_HOME/skills" "Codex skills directory"
+check_dir "$CODEX_HOME/projects" "Codex projects directory"
 check_file "$CODEX_HOME/generated/CLAUDE.md" "Installed Codex generated rules"
 
 exit "$status"
