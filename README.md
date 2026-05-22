@@ -1,4 +1,4 @@
-# AI Workflow Kit
+# CESO AI Workflow Kit
 
 Personal AI assistant workflow configuration for Claude and Codex.
 
@@ -35,7 +35,7 @@ Point your Codex shell alias at a wrapper that runs sync and install before
 launching Codex. That keeps Codex updated whenever you start a new session.
 
 ```bash
-alias codex="$HOME/code/ai-workflow-kit/bin/codex-with-claude-sync"
+alias codex="$HOME/code/ceso-ai-workflow-kit/bin/codex-with-claude-sync"
 ```
 
 On this machine, the alias lives in `~/.zshrc`.
