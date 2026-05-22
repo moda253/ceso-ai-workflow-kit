@@ -3,6 +3,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
+CONFIG="${WORKFLOW_KIT_CONFIG:-$ROOT/config.local.json}"
 
 status=0
 
@@ -31,10 +32,11 @@ check_dir() {
 }
 
 check_file "$ROOT/claude/CLAUDE.md" "Claude source rules"
+check_file "$ROOT/config.example.json" "Example local config"
+check_file "$CONFIG" "Local sync config"
 check_file "$ROOT/codex/generated/CLAUDE.md" "Codex generated rules"
 check_dir "$CODEX_HOME" "Codex home"
 check_dir "$CODEX_HOME/skills" "Codex skills directory"
 check_file "$CODEX_HOME/generated/CLAUDE.md" "Installed Codex generated rules"
 
 exit "$status"
-

@@ -20,6 +20,7 @@ bin/
 scripts/
   sync-claude-to-codex
   sync-and-commit
+  init-local-config
   install-codex-wrapper
   install
   doctor
@@ -33,6 +34,15 @@ Clone the repo wherever you keep personal tooling:
 git clone git@github.com:molson253/ceso-ai-workflow-kit.git /path/to/ceso-ai-workflow-kit
 cd /path/to/ceso-ai-workflow-kit
 ```
+
+Create and edit the local sync config:
+
+```bash
+scripts/init-local-config
+```
+
+Edit `config.local.json` so each source path exists on your machine and each
+destination path is where you want that source stored in the kit.
 
 Install the generated Codex files:
 
@@ -62,25 +72,28 @@ source ~/.zshrc
 
 ## Workflow
 
-Update the kit from Claude's source files, generate Codex files, install them,
-commit the changes, and push:
+Choose which Claude files and skills to sync in `config.local.json`. This file
+is gitignored because every developer can have different local paths.
+
+Update the kit from the configured Claude source files, generate Codex files,
+install them, commit the changes, and push:
 
 ```bash
-cd ~/code/ceso-ai-workflow-kit
+cd /path/to/ceso-ai-workflow-kit
 scripts/sync-and-commit
 ```
 
 Use a custom commit message:
 
 ```bash
-cd ~/code/ceso-ai-workflow-kit
+cd /path/to/ceso-ai-workflow-kit
 scripts/sync-and-commit "Update CESO workflow notes"
 ```
 
 Run the steps manually when debugging:
 
 ```bash
-cd ~/code/ceso-ai-workflow-kit
+cd /path/to/ceso-ai-workflow-kit
 scripts/sync-claude-to-codex
 scripts/install
 scripts/doctor
@@ -88,9 +101,8 @@ scripts/doctor
 
 ## Conversation Commands
 
-Tell Claude to update the CESO AI workflow kit. Claude will copy
-`~/.claude/CLAUDE.md` and `~/.claude/skills/ceso-labs/SKILL.md` into this repo,
-then run `scripts/sync-and-commit`.
+Tell Claude to update the CESO AI workflow kit. Claude should copy the files
+listed in `config.local.json` into this repo, then run `scripts/sync-and-commit`.
 
 Tell Codex to refresh the workflow kit and reload the ceso-labs guidance for the
 current conversation. Codex should pull this repo if needed, run

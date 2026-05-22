@@ -1,0 +1,19 @@
+{
+  "sources": [
+    {
+      "name": "global-claude",
+      "source": "~/.claude/CLAUDE.md",
+      "destination": "claude/CLAUDE.md"
+    },
+    {
+      "name": "example-skill",
+      "source": "~/.claude/skills/example-skill",
+      "destination": "claude/skills/example-skill"
+    },
+    {
+      "name": "example-project",
+      "source": "~/code/example-project/.claude/CLAUDE.md",
+      "destination": "claude/projects/example-project/CLAUDE.md"
+    }
+  ]
+}

@@ -3,12 +3,43 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 COMMIT_MSG="${1:-Update AI workflow}"
+CONFIG="${WORKFLOW_KIT_CONFIG:-$ROOT/config.local.json}"
 
-echo "Copying Claude source files..."
+if [ ! -f "$CONFIG" ]; then
+  echo "Missing config: $CONFIG"
+  echo "Run scripts/init-local-config, then edit config.local.json."
+  exit 1
+fi
 
-mkdir -p "$ROOT/claude/skills/ceso-labs"
-cp "$HOME/.claude/CLAUDE.md" "$ROOT/claude/CLAUDE.md"
-cp "$HOME/.claude/skills/ceso-labs/SKILL.md" "$ROOT/claude/skills/ceso-labs/SKILL.md"
+echo "Copying configured Claude source files..."
+
+ruby -rjson -rfileutils -e '
+  root = ARGV.fetch(0)
+  config_path = ARGV.fetch(1)
+  config = JSON.parse(File.read(config_path))
+
+  config.fetch("sources").each do |source|
+    name = source.fetch("name")
+    from = File.expand_path(source.fetch("source"))
+    to = File.expand_path(source.fetch("destination"), root)
+
+    unless File.exist?(from)
+      warn "Missing source for #{name}: #{from}"
+      exit 1
+    end
+
+    FileUtils.mkdir_p(File.dirname(to))
+    if File.directory?(from)
+      FileUtils.rm_rf(to)
+      FileUtils.mkdir_p(to)
+      FileUtils.cp_r(Dir.glob(File.join(from, "*"), File::FNM_DOTMATCH).reject { |path| [".", ".."].include?(File.basename(path)) }, to)
+    else
+      FileUtils.cp(from, to)
+    end
+
+    puts "copied #{name}: #{from} -> #{to}"
+  end
+' "$ROOT" "$CONFIG"
 
 echo "Syncing to Codex..."
 "$ROOT/scripts/sync-claude-to-codex"
