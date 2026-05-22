@@ -75,6 +75,3 @@ The user needs to discuss code changes in team meetings and must understand ever
 
 - If the user asks something unrelated to the current task, pause and ask: "Do you want to continue here, start a new conversation, or clear the current one?" Don't just answer off-topic questions and keep going — context drift makes it harder to complete the actual task.
 - Before starting a task that looks like it will be long (many files to read, multiple services to update, large refactors), flag it to the user and suggest they check their Claude usage first to avoid getting cut off mid-task. You can't check their usage automatically — just give them the heads up so they can check manually.
-
-## ⚠️ TEST MARKER — REMOVE THIS SECTION
-- This line was added by Claude to test the ceso-ai-workflow-kit sync pipeline. It should appear in Codex after syncing.

@@ -37,6 +37,3 @@
 - i18n support across all apps (9+ languages)
 
 ## ---- END CODEBASE CONVENTIONS ----
-
-# ⚠️ TEST MARKER — REMOVE THIS SECTION
-- This line was added by Claude to test the ceso-ai-workflow-kit sync pipeline. It should appear in Codex after syncing.
