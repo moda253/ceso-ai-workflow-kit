@@ -1,5 +1,3 @@
-# remove next time
-
 # Go Conventions (buoy/)
 
 - Package structure: `cmd/` (CLI entry), `app/` (business logic), `app/services/` (gRPC service implementations), `db/` (migrations + SQL queries), `config/` (global config)
