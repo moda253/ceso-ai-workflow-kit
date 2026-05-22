@@ -21,6 +21,7 @@ bin/
 scripts/
   sync-claude-to-codex
   sync-and-commit
+  configure
   init-local-config
   install-codex-wrapper
   install
@@ -36,14 +37,24 @@ git clone git@github.com:molson253/ceso-ai-workflow-kit.git /path/to/ceso-ai-wor
 cd /path/to/ceso-ai-workflow-kit
 ```
 
-Create and edit the local sync config:
+Create the local sync config with the guided setup:
+
+```bash
+scripts/configure
+```
+
+The setup asks for a profile name, optionally scans a project repo for
+`.claude/CLAUDE.md` files, optionally includes the global Claude file, and
+optionally includes Claude skills from `~/.claude/skills`.
+
+Create a template manually instead:
 
 ```bash
 scripts/init-local-config
 ```
 
-Edit `config.local.json` so each source path exists on your machine and each
-destination path is where you want that source stored in the kit.
+Then edit `config.local.json` so each source path exists on your machine and
+each destination path is where you want that source stored in the kit.
 
 Install the generated Codex files:
 
@@ -76,6 +87,13 @@ source ~/.zshrc
 Choose which Claude files and skills to sync in `config.local.json`. This file
 is gitignored because every developer can have different local paths.
 Use `profiles` in `config.local.json` to group sources by project.
+
+Run the guided setup again to add or update a profile:
+
+```bash
+cd /path/to/ceso-ai-workflow-kit
+scripts/configure
+```
 
 Update the kit from the configured Claude source files, generate Codex files,
 install them, commit the changes, and push:

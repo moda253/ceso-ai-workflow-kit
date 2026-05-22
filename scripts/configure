@@ -1,0 +1,134 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+CONFIG="${WORKFLOW_KIT_CONFIG:-$ROOT/config.local.json}"
+
+ruby -rjson -rfileutils -e '
+  root = ARGV.fetch(0)
+  config_path = ARGV.fetch(1)
+
+  def ask(prompt, default = nil)
+    suffix = default.nil? ? "" : " [#{default}]"
+    print "#{prompt}#{suffix}: "
+    answer = STDIN.gets
+    exit 1 if answer.nil?
+    answer = answer.strip
+    answer.empty? && !default.nil? ? default : answer
+  end
+
+  def yes?(prompt, default = true)
+    label = default ? "Y/n" : "y/N"
+    loop do
+      answer = ask("#{prompt} (#{label})")
+      return default if answer.empty?
+      return true if %w[y yes].include?(answer.downcase)
+      return false if %w[n no].include?(answer.downcase)
+      puts "Please answer yes or no."
+    end
+  end
+
+  def slug(value)
+    value.downcase.gsub(/[^a-z0-9]+/, "-").gsub(/\A-|-+\z/, "")
+  end
+
+  def display_path(path)
+    home = File.expand_path("~")
+    path.start_with?(home + "/") ? path.sub(home, "~") : path
+  end
+
+  def destination_for_project(profile, project_root, claude_file)
+    relative = claude_file.sub(project_root.sub(%r{/+\z}, "") + "/", "")
+    parent = File.dirname(relative.sub(%r{\.claude/CLAUDE\.md\z}, ""))
+    segment = parent == "." || parent.empty? ? "root" : parent
+    File.join("claude", "projects", profile, segment, "CLAUDE.md")
+  end
+
+  existing = File.exist?(config_path) ? JSON.parse(File.read(config_path)) : { "sources" => [], "profiles" => {} }
+  sources = existing.fetch("sources", [])
+  profiles = existing.fetch("profiles", {})
+
+  puts "CESO AI Workflow Kit configuration"
+  puts
+
+  profile = slug(ask("Profile name", "default"))
+  selected_names = []
+
+  global_claude = File.expand_path("~/.claude/CLAUDE.md")
+  if File.file?(global_claude) && yes?("Include global Claude file #{display_path(global_claude)}?", true)
+    name = "global-claude"
+    sources.reject! { |source| source["name"] == name }
+    sources << {
+      "name" => name,
+      "source" => "~/.claude/CLAUDE.md",
+      "destination" => "claude/CLAUDE.md"
+    }
+    selected_names << name
+  end
+
+  project_root_answer = ask("Project repo path to scan for .claude/CLAUDE.md files, or blank to skip", "")
+  unless project_root_answer.empty?
+    project_root = File.expand_path(project_root_answer)
+    if !File.directory?(project_root)
+      warn "Project path is not a directory: #{project_root}"
+      exit 1
+    end
+
+    project_files = Dir.glob(File.join(project_root, "**", ".claude", "CLAUDE.md")).sort
+    if project_files.empty?
+      puts "No project CLAUDE.md files found under #{project_root}."
+    else
+      puts "Found project Claude files:"
+      project_files.each do |file|
+        next unless yes?("Include #{display_path(file)}?", true)
+        destination = destination_for_project(profile, project_root, file)
+        name = "#{profile}-project-#{slug(destination.sub(%r{\Aclaude/projects/#{Regexp.escape(profile)}/}, "").sub(%r{/CLAUDE\.md\z}, ""))}"
+        sources.reject! { |source| source["name"] == name }
+        sources << {
+          "name" => name,
+          "source" => display_path(file),
+          "destination" => destination
+        }
+        selected_names << name
+      end
+    end
+  end
+
+  skills_root = File.expand_path("~/.claude/skills")
+  if File.directory?(skills_root) && yes?("Scan Claude skills in #{display_path(skills_root)}?", true)
+    skill_files = Dir.glob(File.join(skills_root, "*", "SKILL.md")).sort
+    if skill_files.empty?
+      puts "No Claude skills found under #{display_path(skills_root)}."
+    else
+      skill_files.each do |skill_file|
+        skill_dir = File.dirname(skill_file)
+        skill_name = File.basename(skill_dir)
+        next unless yes?("Include Claude skill #{skill_name}?", false)
+        name = "skill-#{slug(skill_name)}"
+        sources.reject! { |source| source["name"] == name }
+        sources << {
+          "name" => name,
+          "source" => "~/.claude/skills/#{skill_name}",
+          "destination" => "claude/skills/#{skill_name}"
+        }
+        selected_names << name
+      end
+    end
+  end
+
+  if selected_names.empty?
+    warn "No sources selected; config.local.json was not changed."
+    exit 1
+  end
+
+  profiles[profile] = selected_names.uniq
+  config = {
+    "sources" => sources.sort_by { |source| source.fetch("name") },
+    "profiles" => profiles.sort.to_h
+  }
+
+  File.write(config_path, JSON.pretty_generate(config) + "\n")
+  puts
+  puts "Wrote #{config_path}"
+  puts "Profile #{profile}: #{profiles[profile].join(", ")}"
+' "$ROOT" "$CONFIG"
