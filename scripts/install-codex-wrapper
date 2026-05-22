@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+LOCAL_BIN="${LOCAL_BIN:-$HOME/.local/bin}"
+WRAPPER="$LOCAL_BIN/codex-with-claude-sync"
+
+mkdir -p "$LOCAL_BIN"
+
+cat > "$WRAPPER" <<EOF
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$ROOT"
+
+"\$ROOT/scripts/sync-claude-to-codex"
+"\$ROOT/scripts/install"
+
+exec codex "\$@"
+EOF
+
+chmod +x "$WRAPPER"
+
+echo "Installed Codex startup wrapper at $WRAPPER."
+echo "Add this alias to your shell config:"
+echo "alias codex=\"\$HOME/.local/bin/codex-with-claude-sync\""

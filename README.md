@@ -20,18 +20,18 @@ bin/
 scripts/
   sync-claude-to-codex
   sync-and-commit
+  install-codex-wrapper
   install
   doctor
 ```
 
 ## Fresh Install
 
-Clone the repo:
+Clone the repo wherever you keep personal tooling:
 
 ```bash
-mkdir -p ~/code
-git clone git@github.com:molson253/ceso-ai-workflow-kit.git ~/code/ceso-ai-workflow-kit
-cd ~/code/ceso-ai-workflow-kit
+git clone git@github.com:molson253/ceso-ai-workflow-kit.git /path/to/ceso-ai-workflow-kit
+cd /path/to/ceso-ai-workflow-kit
 ```
 
 Install the generated Codex files:
@@ -42,10 +42,16 @@ scripts/install
 scripts/doctor
 ```
 
-Add the Codex startup wrapper to `~/.zshrc`:
+Install the Codex startup wrapper:
 
 ```bash
-alias codex="$HOME/code/ceso-ai-workflow-kit/bin/codex-with-claude-sync"
+scripts/install-codex-wrapper
+```
+
+Add the stable wrapper alias to `~/.zshrc`:
+
+```bash
+alias codex="$HOME/.local/bin/codex-with-claude-sync"
 ```
 
 Reload the shell:
@@ -104,7 +110,7 @@ Point your Codex shell alias at a wrapper that runs sync and install before
 launching Codex. That keeps Codex updated whenever you start a new session.
 
 ```bash
-alias codex="$HOME/code/ceso-ai-workflow-kit/bin/codex-with-claude-sync"
+alias codex="$HOME/.local/bin/codex-with-claude-sync"
 ```
 
 On this machine, the alias lives in `~/.zshrc`.
