@@ -82,6 +82,36 @@ Reload the shell:
 source ~/.zshrc
 ```
 
+Tell Claude about the workflow kit. Paste this into Claude and ask it to save
+the workflow for future conversations:
+
+```text
+The CESO AI workflow kit is installed at /path/to/ceso-ai-workflow-kit.
+
+Important files and commands:
+- config.local.json is gitignored and controls local source mappings/profiles.
+- config.example.json is the committed template.
+- scripts/configure is the guided setup wizard for adding profiles/sources.
+- scripts/sync-and-commit reads config.local.json.
+- scripts/sync-and-commit --profile <name> syncs only that profile.
+- scripts/sync-and-commit --list-profiles lists available profiles.
+
+When I say "update the CESO AI workflow kit", run:
+cd /path/to/ceso-ai-workflow-kit
+scripts/sync-and-commit
+
+When I say "update the CESO AI workflow kit for <profile>", run:
+cd /path/to/ceso-ai-workflow-kit
+scripts/sync-and-commit --profile <profile>
+
+When I ask to add or change project profiles, run:
+cd /path/to/ceso-ai-workflow-kit
+scripts/configure
+
+Do not hand-edit codex/generated, codex/skills, or codex/projects. Update
+Claude-side source files and let the scripts generate Codex output.
+```
+
 ## Workflow
 
 Choose which Claude files and skills to sync in `config.local.json`. This file
