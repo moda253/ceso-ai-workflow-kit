@@ -3,10 +3,44 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CONFIG="${WORKFLOW_KIT_CONFIG:-$ROOT/config.local.json}"
+RESET=0
+REMOVE_PROFILE=""
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --reset)
+      RESET=1
+      shift
+      ;;
+    --remove-profile)
+      REMOVE_PROFILE="${2:-}"
+      if [ -z "$REMOVE_PROFILE" ]; then
+        echo "Missing value for --remove-profile"
+        exit 1
+      fi
+      shift 2
+      ;;
+    --remove-profile=*)
+      REMOVE_PROFILE="${1#--remove-profile=}"
+      shift
+      ;;
+    *)
+      echo "Unknown option: $1"
+      exit 1
+      ;;
+  esac
+done
+
+if [ "$RESET" -eq 1 ]; then
+  rm -f "$CONFIG"
+  echo "Removed $CONFIG."
+  exit 0
+fi
 
 ruby -rjson -rfileutils -e '
   root = ARGV.fetch(0)
   config_path = ARGV.fetch(1)
+  remove_profile = ARGV.fetch(2)
 
   def ask(prompt, default = nil)
     suffix = default.nil? ? "" : " [#{default}]"
@@ -47,6 +81,26 @@ ruby -rjson -rfileutils -e '
   existing = File.exist?(config_path) ? JSON.parse(File.read(config_path)) : { "sources" => [], "profiles" => {} }
   sources = existing.fetch("sources", [])
   profiles = existing.fetch("profiles", {})
+
+  unless remove_profile.empty?
+    unless profiles.key?(remove_profile)
+      warn "Profile not found: #{remove_profile}"
+      exit 1
+    end
+
+    profiles.delete(remove_profile)
+    referenced = profiles.values.flatten.uniq
+    sources = sources.select { |source| referenced.include?(source.fetch("name")) }
+
+    config = {
+      "sources" => sources.sort_by { |source| source.fetch("name") },
+      "profiles" => profiles.sort.to_h
+    }
+
+    File.write(config_path, JSON.pretty_generate(config) + "\n")
+    puts "Removed profile #{remove_profile} from #{config_path}."
+    exit 0
+  end
 
   puts "CESO AI Workflow Kit configuration"
   puts
@@ -131,4 +185,4 @@ ruby -rjson -rfileutils -e '
   puts
   puts "Wrote #{config_path}"
   puts "Profile #{profile}: #{profiles[profile].join(", ")}"
-' "$ROOT" "$CONFIG"
+' "$ROOT" "$CONFIG" "$REMOVE_PROFILE"

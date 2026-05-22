@@ -125,6 +125,21 @@ cd /path/to/ceso-ai-workflow-kit
 scripts/configure
 ```
 
+Remove a local profile from `config.local.json`:
+
+```bash
+cd /path/to/ceso-ai-workflow-kit
+scripts/configure --remove-profile example-project
+```
+
+Delete `config.local.json` and start local setup over:
+
+```bash
+cd /path/to/ceso-ai-workflow-kit
+scripts/configure --reset
+scripts/configure
+```
+
 Update the kit from the configured Claude source files, generate Codex files,
 install them, commit the changes, and push:
 
