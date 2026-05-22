@@ -50,24 +50,14 @@ scripts/doctor
 
 ## Conversation Commands
 
-Ask Claude:
+Tell Claude to update the CESO AI workflow kit. Claude will copy
+`~/.claude/CLAUDE.md` and `~/.claude/skills/ceso-labs/SKILL.md` into this repo,
+then run `scripts/sync-and-commit`.
 
-```text
-Sync the workflow kit.
-```
-
-Claude should copy the mapped source files into this repo, then run
-`scripts/sync-and-commit`.
-
-Ask Codex:
-
-```text
-Refresh the workflow kit and reload the ceso-labs guidance for this conversation.
-```
-
-Codex should pull this repo if needed, run `scripts/sync-claude-to-codex`, run
-`scripts/install`, then read the relevant updated files for the active
-conversation.
+Tell Codex to refresh the workflow kit and reload the ceso-labs guidance for the
+current conversation. Codex should pull this repo if needed, run
+`scripts/sync-claude-to-codex`, run `scripts/install`, then read the relevant
+updated files for the active conversation.
 
 ## Startup Wrapper
 
