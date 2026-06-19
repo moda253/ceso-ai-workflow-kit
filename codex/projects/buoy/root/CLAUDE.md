@@ -1,5 +1,9 @@
 <!-- GENERATED FROM claude/projects/buoy/root/CLAUDE.md. Do not edit directly. -->
 
+# Task Templates
+
+The `/ceso-task-templates` skill is available for starting new Asana tasks in this monorepo. The user invokes it manually when they're ready to kick off new work — do NOT suggest it unprompted during normal conversation. It handles branch setup and template-based task intake (Buoy endpoint, Boat screen, Artoo integration, tests, bug fix).
+
 # Go Conventions (buoy/)
 
 - Package structure: `cmd/` (CLI entry), `app/` (business logic), `app/services/` (gRPC service implementations), `db/` (migrations + SQL queries), `config/` (global config)

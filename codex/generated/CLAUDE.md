@@ -13,6 +13,16 @@
 - Never add "Co-Authored-By: Claude" or any Claude attribution to commit messages
 - Never modify commented-out code
 - When replying to PR comments, write natural, human-sounding responses — conversational and casual like a fellow developer, not formulaic or agent-like
+- All commits and PRs in the Depot repo use `Depot:` as the prefix regardless of which feature area they touch
+
+# Depot Branch & Deploy Flow
+
+- **Branch flow:** feature branch → `develop-depot` → `main`
+- **Local** (port 8080) — always develop and test here first
+- **Staging** (`depotst@104.193.108.203`) — tracks `develop-depot`; deploy here for user testing
+- **Production** (`lctdepot@104.193.108.203`) — tracks `main`; deploy only after merging `develop-depot` → `main`
+- Never deploy directly to production without going through local and staging first
+- Never push directly to `main` — always via PR from `develop-depot`
 
 # User Context
 
