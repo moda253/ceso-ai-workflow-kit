@@ -49,3 +49,10 @@
 - i18n support across all apps (9+ languages)
 
 ## ---- END CODEBASE CONVENTIONS ----
+
+# AI Workflow Guardrails (CESO Labs)
+
+- At the start of any development task in buoy/, boat/, or compass/, invoke the `ceso-workflow` skill before writing any code
+- Never write implementation code on a Standard-tier feature task without a plan in place — invoke `ceso-task-templates` and `superpowers:writing-plans` first
+- Always run `/code-review` before pushing — no exceptions, including "small" changes
+- After any PR feedback from Jesse or Dee, save pattern-shaped comments to memory before implementing changes

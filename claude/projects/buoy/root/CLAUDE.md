@@ -9,7 +9,7 @@ The `/ceso-task-templates` skill is available for starting new Asana tasks in th
 - Constructor pattern: `NewX()` functions (e.g., `NewServer()`, `NewCache()`)
 - Interface naming: suffix with `I` (e.g., `ArtooServiceI`, `CacheI`)
 - Import ordering: (1) stdlib, (2) third-party, (3) internal `buoy/` — separated by blank lines
-- Error handling: custom sentinel error structs, `connect.NewError(code, err)` for gRPC errors, check `pgx.ErrNoRows` explicitly
+- Error handling: custom sentinel error structs, `connect.NewError(code, err)` for gRPC errors, check `pgx.ErrNoRows` explicitly. When a DB/query call fails and you want to surface the error, return `err` directly — do not also log it, and do not wrap it in `connect.NewError`. The New Relic interceptor logs unexpected errors centrally and its `rewriteError` function sanitizes plain errors to a generic message before they reach the client.
 - Logging: `log/slog` via `logging.FromContext(ctx)` with structured key-value pairs
 - Context: always first parameter; custom `FromContext()` extractors per package; context keys as unexported struct types
 - Config: environment variables loaded at startup in `config.InitConfig()`; properties file for feature flags via `config.BuoyConfig`
