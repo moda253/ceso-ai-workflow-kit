@@ -51,9 +51,9 @@ If the user says proceed, move on without repeating the prompt.
 - Never edit `gen/` files or `app_localizations_*.dart` directly — edit source and run the generator
 
 ### Phase 5 — Dual Code Review *(Standard tier, recommended)*
-- **Action:** Invoke `ceso-review` against `git diff develop...HEAD`
+- **Action:** Invoke `ceso-review` against `git diff develop...HEAD` — all changes on the branch
 - Claude considers findings and makes warranted changes
-- **Then:** Claude runs `/code-review`
+- **Then:** Claude runs `/code-review` on the branch's changes
 - **Then:** Invoke `superpowers:verification-before-completion`
 - **Skip prompt:** "We haven't run a code review yet — want to do a `ceso-review` and `/code-review` before pushing?"
 
