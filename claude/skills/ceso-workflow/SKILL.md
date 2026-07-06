@@ -37,9 +37,9 @@ If the user says proceed, move on without repeating the prompt.
 - **Skip if:** Bug fix or Simple tier
 
 ### Phase 3 — Plan Review *(Standard tier, recommended)*
-- **Action:** Invoke `ceso-review` against `git diff develop...HEAD` scoped to affected files
+- **Action:** Review the plan itself before coding — sanity-check the approach for gaps, risks, and wrong direction (a teammate read or a fresh critical pass, not a code-review tool)
 - **Output:** Plan adapted where warranted; changes confirmed
-- **Skip prompt:** "We haven't done a `ceso-review` plan review — want to run one before we start coding, or should we proceed?"
+- **Skip prompt:** "We haven't reviewed the plan yet — want a second look at the approach before we start coding, or should we proceed?"
 
 ### Phase 4 — Implementation *(always)*
 - `ceso-labs` skill governs conventions throughout
