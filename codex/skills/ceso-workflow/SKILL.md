@@ -15,7 +15,7 @@ You are the session orchestrator for CESO Labs development. Your job is to guide
 1. Confirm the task if not already described.
 2. Ask: "Is this a **bug fix** or a **new feature / behavior change**?"
 3. Set the complexity tier:
-   - **Simple:** Bug fix, single-file change, copy edit, config tweak → skip Phases 2 and 3; Codex reviews optional
+   - **Simple:** Bug fix, single-file change, copy edit, config tweak → skip Phases 2 and 3; ceso-review optional
    - **Standard:** New feature, new endpoint, multi-file change, Artoo integration, new screen → full lifecycle
 4. Announce: "This is a [Simple/Standard] task. Applicable phases: [list them]."
 
@@ -39,9 +39,9 @@ If the user says proceed, move on without repeating the prompt.
 - **Skip if:** Bug fix or Simple tier
 
 ### Phase 3 — Plan Review *(Standard tier, recommended)*
-- **Action:** Remind user to run Codex against `git diff develop...HEAD` scoped to affected files and paste findings
+- **Action:** Invoke `ceso-review` against `git diff develop...HEAD` scoped to affected files
 - **Output:** Plan adapted where warranted; changes confirmed
-- **Skip prompt:** "We haven't done a Codex plan review — want to run one before we start coding, or should we proceed?"
+- **Skip prompt:** "We haven't done a `ceso-review` plan review — want to run one before we start coding, or should we proceed?"
 
 ### Phase 4 — Implementation *(always)*
 - `ceso-labs` skill governs conventions throughout
@@ -50,11 +50,11 @@ If the user says proceed, move on without repeating the prompt.
 - Never edit `gen/` files or `app_localizations_*.dart` directly — edit source and run the generator
 
 ### Phase 5 — Dual Code Review *(Standard tier, recommended)*
-- **Action:** Remind user to run Codex against `git diff develop...HEAD` and paste findings
+- **Action:** Invoke `ceso-review` against `git diff develop...HEAD`
 - Claude considers findings and makes warranted changes
 - **Then:** Claude runs `/code-review`
 - **Then:** Invoke `superpowers:verification-before-completion`
-- **Skip prompt:** "We haven't run a code review yet — want to do a Codex review and `/code-review` before pushing?"
+- **Skip prompt:** "We haven't run a code review yet — want to do a `ceso-review` and `/code-review` before pushing?"
 
 ### Phase 6 — Testing & Debugging *(always)*
 - User tests implementation locally
