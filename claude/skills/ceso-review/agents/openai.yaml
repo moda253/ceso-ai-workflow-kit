@@ -1,0 +1,4 @@
+interface:
+  display_name: "CESO Review"
+  short_description: "Run Mike's read-only branch and PR code review workflow."
+  default_prompt: "Use ceso-review to review this branch or PR for correctness, implementation quality, project conventions, tests, database safety, and client impact. Modify no files; report findings only."
