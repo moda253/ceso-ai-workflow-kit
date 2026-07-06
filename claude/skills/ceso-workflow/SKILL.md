@@ -42,6 +42,7 @@ If the user says proceed, move on without repeating the prompt.
 - **Skip prompt:** "We haven't reviewed the plan yet — want a second look at the approach before we start coding, or should we proceed?"
 
 ### Phase 4 — Implementation *(always)*
+- **Pick the implementation mode that fits the task:** *manual* (you write it, no AI), *AI-advised* (you write it, AI consults), *AI-assisted* (you and AI write alongside), or *AI-implemented* (AI drafts, you review). Whichever you choose — you own the code and must be able to explain and defend it.
 - `ceso-labs` skill governs conventions throughout
 - For test-driven work: invoke `superpowers:test-driven-development`
 - For bug root cause: invoke `superpowers:systematic-debugging`
